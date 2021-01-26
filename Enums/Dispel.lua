@@ -39,6 +39,7 @@ DMW.Enums.DispelLogic = {
     [275014] = {Range = 3},
     [261440] = {Range = 6},
     [252781] = {Range = 8},
+
     [255371] = {Stacks = 2},
     [276031] = {Stacks = 2},
     [269301] = {Stacks = 3},

@@ -59,21 +59,21 @@ local function SortEnemies()
     end
     if #Enemies > 1 then
         table.sort(
-            Enemies,
-            function(x, y)
-                return x.EnemyScore > y.EnemyScore
-            end
+                Enemies,
+                function(x, y)
+                    return x.EnemyScore > y.EnemyScore
+                end
         )
         if UnitIsVisible("target") then
             table.sort(
-                Enemies,
-                function(x)
-                    if UnitIsUnit(x.Pointer, "target") then
-                        return true
-                    else
-                        return false
+                    Enemies,
+                    function(x)
+                        if UnitIsUnit(x.Pointer, "target") then
+                            return true
+                        else
+                            return false
+                        end
                     end
-                end
             )
         end
     end
@@ -83,10 +83,10 @@ local function HandleFriends()
     table.wipe(DMW.Friends.Tanks)
     if #Friends > 1 then
         table.sort(
-            Friends,
-            function(x, y)
-                return x.HP < y.HP
-            end
+                Friends,
+                function(x, y)
+                    return x.HP < y.HP
+                end
         )
     end
     for _, Unit in pairs(Friends) do
@@ -132,9 +132,10 @@ local function UpdateUnits()
         if Unit.ValidEnemy then
             table.insert(Enemies, Unit)
         end
-        if Unit.ObjectID == 26125 and UnitCreator(Pointer) and DMW.Player.Pointer == UnitCreator(Pointer) then -- DK Ghoul
+        if Unit.ObjectID == 26125 and UnitCreator(Pointer) and DMW.Player.Pointer == UnitCreator(Pointer) then
+            -- DK Ghoul
             DMW.Player.Ghoul = Unit
-        end 
+        end
         if DMW.Player.InGroup and Unit.Player and not Unit.Attackable and Unit.LoS and (UnitInRaid(Pointer) or UnitInParty(Pointer)) then
             Unit:CalculateHP()
             table.insert(Friends, Unit)

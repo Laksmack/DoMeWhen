@@ -6,6 +6,9 @@ function Unit:New(Pointer)
     self.Name = not UnitIsUnit(Pointer, "player") and UnitName(Pointer) or "LocalPlayer"
     self.GUID = UnitGUID(Pointer)
     self.Player = UnitIsPlayer(Pointer)
+    if self.Player then
+        self.Class = select(2, UnitClass(Pointer)):gsub("%s+", "")
+    end
     self.Friend = UnitIsFriend("player", self.Pointer)
     self.CombatReach = UnitCombatReach(Pointer)
     self.Level = UnitLevel(Pointer)
@@ -16,7 +19,7 @@ function Unit:New(Pointer)
     if self.Player then
         self.Height = 2
     else
-        self.Height = select(2,UnitCollisionBox(self.Pointer))
+        self.Height = select(2, UnitCollisionBox(self.Pointer))
     end
     DMW.Functions.AuraCache.Refresh(Pointer)
 end
@@ -46,7 +49,7 @@ function Unit:Update()
     end
     if self.Distance > 50 then
         self.NextUpdate = DMW.Time + (math.random(500, 1000) / 1000)
-    end 
+    end
     self.Attackable = self.LoS and UnitCanAttack("player", self.Pointer) or false
     self.ValidEnemy = self.Attackable and self:IsEnemy() or false
     self.Target = UnitTarget(self.Pointer)
@@ -115,7 +118,7 @@ function Unit:HasThreat()
         return false
     elseif self.CreatureType == "Totem" and DMW.Player.Combat and isTarget then
         return true
-    elseif DMW.Player.Instance ~= "none" and (UnitAffectingCombat(self.Pointer) or (isTarget and GetNumGroupMembers() <= 1 )) then
+    elseif DMW.Player.Instance ~= "none" and (UnitAffectingCombat(self.Pointer) or (isTarget and GetNumGroupMembers() <= 1)) then
         return true
     elseif DMW.Player.Instance == "none" and (DMW.Enums.Dummy[self.ObjectID] or isTarget) then
         return true
@@ -168,8 +171,8 @@ function Unit:HardCC()
     if DMW.Enums.HardCCUnits[self.ObjectID] then
         return true
     end
-    local CastingInfo = {UnitCastingInfo(self.Pointer)} --name, text, texture, startTimeMS, endTimeMS, isTradeSkill, castID, notInterruptible, spellId
-    local ChannelInfo = {UnitChannelInfo(self.Pointer)} --name, text, texture, startTimeMS, endTimeMS, isTradeSkill, notInterruptible, spellId
+    local CastingInfo = { UnitCastingInfo(self.Pointer) } --name, text, texture, startTimeMS, endTimeMS, isTradeSkill, castID, notInterruptible, spellId
+    local ChannelInfo = { UnitChannelInfo(self.Pointer) } --name, text, texture, startTimeMS, endTimeMS, isTradeSkill, notInterruptible, spellId
     local StartTime, SpellID
     if CastingInfo[4] then
         StartTime = CastingInfo[4] / 1000
@@ -191,8 +194,8 @@ function Unit:Interrupt()
     end
     local Settings = DMW.Settings.profile
     local StartTime, EndTime, SpellID, Type
-    local CastingInfo = {UnitCastingInfo(self.Pointer)} --name, text, texture, startTimeMS, endTimeMS, isTradeSkill, castID, notInterruptible, spellId
-    local ChannelInfo = {UnitChannelInfo(self.Pointer)} --name, text, texture, startTimeMS, endTimeMS, isTradeSkill, notInterruptible, spellId
+    local CastingInfo = { UnitCastingInfo(self.Pointer) } --name, text, texture, startTimeMS, endTimeMS, isTradeSkill, castID, notInterruptible, spellId
+    local ChannelInfo = { UnitChannelInfo(self.Pointer) } --name, text, texture, startTimeMS, endTimeMS, isTradeSkill, notInterruptible, spellId
     if CastingInfo[5] and not CastingInfo[8] then
         StartTime = CastingInfo[4] / 1000
         EndTime = CastingInfo[5] / 1000
@@ -245,13 +248,13 @@ function Unit:Dispel(Spell)
     local AuraReturn
     for _, Aura in pairs(AuraCache) do
         if (self.Friend and Aura.Type == "HARMFUL") or (not self.Friend and Aura.Type == "HELPFUL") then
-            AuraReturn = Aura.AuraReturn 
+            AuraReturn = Aura.AuraReturn
             Elapsed = AuraReturn[5] - (AuraReturn[6] - DMW.Time)
             if AuraReturn[4] and DispelTypes[AuraReturn[4]] and Elapsed > Delay then
                 if DMW.Enums.NoDispel[AuraReturn[10]] then
                     ReturnValue = false
-                    break                
-                elseif DMW.Enums.DispelLogic[AuraReturn[10]] and DMW.Enums.DispelLogic[AuraReturn[10]].Stacks then 
+                    break
+                elseif DMW.Enums.DispelLogic[AuraReturn[10]] and DMW.Enums.DispelLogic[AuraReturn[10]].Stacks then
                     if AuraReturn[3] >= DMW.Enums.DispelLogic[AuraReturn[10]].Stacks then
                         ReturnValue = true
                     else

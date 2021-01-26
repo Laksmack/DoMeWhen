@@ -108,7 +108,7 @@ function Buff:Refresh(Unit, OnlyPlayer)
     Unit = Unit or DMW.Player
     local Remain = self:Remain(Unit, OnlyPlayer)
     if Remain > 0 then
-        local Duration = self.BaseDuration or self:Duration()
+        local Duration = self.BaseDuration or self:Duration(Unit)
         return Remain < (Duration * 0.3)
     end
     return true
@@ -119,7 +119,7 @@ function Debuff:Refresh(Unit, OnlyPlayer)
     Unit = Unit or DMW.Player.Target
     local Remain = self:Remain(Unit, OnlyPlayer)
     if Remain > 0 then
-        local Duration = self.BaseDuration or self:Duration()
+        local Duration = self.BaseDuration or self:Duration(Unit)
         return Remain < (Duration * 0.3) and Unit.TTD > Remain
     end
     return true

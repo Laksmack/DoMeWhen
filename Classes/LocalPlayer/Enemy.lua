@@ -33,6 +33,7 @@ function LocalPlayer:AutoTarget(Yards, Facing)
     end
 end
 
+
 function LocalPlayer:GetEnemies(Yards)
     local Table = {}
     local Count = 0

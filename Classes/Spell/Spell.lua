@@ -66,7 +66,7 @@ function Spell:IsReady()
     --         return false
     --     end
     -- end
-    if self:IsKnown() and IsUsableSpell(self.SpellName) and self:CD() == 0 then
+    if self:IsKnown() and IsUsableSpell(self.SpellName) and self:CD() < 0.2 then
         return true
     end
     return false
